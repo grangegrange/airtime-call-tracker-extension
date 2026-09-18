@@ -1,0 +1,38 @@
+{
+  "manifest_version": 3,
+  "name": "Airtime — Call Time Tracker",
+  "short_name": "Airtime",
+  "version": "1.2.0",
+  "description": "Tracks time spent in calls on Jitsi Meet (with precise join/leave detection), Google Meet, Zoom and MS Teams. 100% local.",
+  "icons": {
+    "16": "icons/icon16.png",
+    "32": "icons/icon32.png",
+    "48": "icons/icon48.png",
+    "128": "icons/icon128.png"
+  },
+  "permissions": ["tabs", "storage", "alarms"],
+  "background": {
+    "service_worker": "background.js"
+  },
+  "action": {
+    "default_popup": "popup.html",
+    "default_title": "Airtime",
+    "default_icon": {
+      "16": "icons/icon16.png",
+      "32": "icons/icon32.png"
+    }
+  },
+  "content_scripts": [
+    {
+      "matches": ["https://meet.jit.si/*"],
+      "js": ["content-jitsi-page.js"],
+      "world": "MAIN",
+      "run_at": "document_start"
+    },
+    {
+      "matches": ["https://meet.jit.si/*"],
+      "js": ["content-jitsi.js"],
+      "run_at": "document_start"
+    }
+  ]
+}

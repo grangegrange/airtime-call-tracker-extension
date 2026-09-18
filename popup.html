@@ -1,0 +1,43 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <link rel="stylesheet" href="popup.css" />
+    <title>Airtime</title>
+  </head>
+  <body>
+    <header class="brand">
+      <img src="icons/icon.svg" class="logo" alt="Airtime logo" />
+      <div class="brand-text">
+        <h1>Airtime</h1>
+        <span class="tagline">Call time tracker</span>
+      </div>
+      <div id="live" class="live hidden">
+        <span class="live-dot"></span>
+        <span id="live-label">In a call</span>
+      </div>
+    </header>
+
+    <main>
+      <section class="card">
+        <h2>In call now</h2>
+        <ul id="active" class="list"></ul>
+        <p id="no-active" class="muted">No active calls</p>
+      </section>
+
+      <section class="card">
+        <h2>History</h2>
+        <p id="total" class="total"></p>
+        <ul id="history" class="list"></ul>
+        <p id="no-history" class="muted">No sessions yet — Airtime starts tracking automatically when you open a call.</p>
+      </section>
+    </main>
+
+    <footer class="actions">
+      <button id="export">Export CSV</button>
+      <button id="clear" class="danger">Clear history</button>
+    </footer>
+
+    <script src="popup.js"></script>
+  </body>
+</html>
