@@ -3,6 +3,19 @@
 All notable changes to Airtime are documented here. Format follows
 [Keep a Changelog](https://keepachangelog.com/).
 
+## [1.2.1] — 2026-09-18
+
+### Changed
+
+- Firefox: added `data_collection_permissions.required = ["none"]` (mandatory
+  for new AMO submissions since Nov 2025) and raised `strict_min_version` to
+  140.0 (desktop) / 142.0 (Android) accordingly.
+- Popup: replaced `innerHTML` assignments with DOM construction.
+
+### Fixed
+
+- `web-ext lint` now passes with 0 errors / 0 warnings.
+
 ## [1.2.0] — 2026-09-18
 
 ### Added

@@ -1,6 +1,6 @@
 {
   "name": "airtime-call-tracker-extension",
-  "version": "1.2.0",
+  "version": "1.2.1",
   "description": "Airtime — automatically tracks time spent in calls on Jitsi Meet, Google Meet, Zoom and MS Teams.",
   "scripts": {
     "test": "node test/background.test.js",

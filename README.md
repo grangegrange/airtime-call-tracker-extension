@@ -149,8 +149,9 @@ PRIVACY.md             privacy policy
     logs, or the Jitsi webhook for outgoing calls) for authoritative call records.
   - *Mobile*: not practical via extension; Firefox for Android supports a subset
     of WebExtension APIs and may work with this codebase (untested).
-- **Firefox** is supported for the tab-based tracking and the Jitsi precise hook
-  (`world: "MAIN"` needs Firefox 128+).
+- **Firefox** is supported for the tab-based tracking and the Jitsi precise hook.
+  The Firefox build requires 140+ (desktop) / 142+ (Android) for the mandatory
+  `data_collection_permissions` manifest key.
 - URL-based detection can't tell whether you are on a call inside an *embedded*
   Jitsi iframe on another site — a content script for that host is a possible
   follow-up.

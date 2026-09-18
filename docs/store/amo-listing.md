@@ -1,8 +1,8 @@
 # Firefox addons.mozilla.org listing (draft)
 
 Filled into the AMO developer hub. The add-on id is fixed in the firefox build:
-`airtime@calltracker`. `strict_min_version` is 128.0 because of the
-`world: "MAIN"` content script used for precise Jitsi tracking.
+`airtime@calltracker`. `strict_min_version` is 140.0 (desktop) / 142.0 (Android)
+— the minimum that supports the mandatory `data_collection_permissions` key.
 
 ## Details
 
@@ -14,7 +14,7 @@ Filled into the AMO developer hub. The add-on id is fixed in the firefox build:
 - **Home page:** https://github.com/grangegrange/airtime-call-tracker-extension
 - **Privacy policy URL:**
   https://github.com/grangegrange/airtime-call-tracker-extension/blob/main/PRIVACY.md
-- **Version:** 1.2.0
+- **Version:** 1.2.1
 
 ## Description
 
@@ -44,7 +44,8 @@ No accounts, no tracking. Install, open a call, done.
 
 - MV3 background runs as a non-persistent event page
   (`background.scripts`), not a service worker.
-- `world: "MAIN"` requires Firefox 128+, hence `strict_min_version: "128.0"`.
+- `world: "MAIN"` requires Firefox 128+; `data_collection_permissions` requires
+  140+ (desktop) / 142+ (Android), hence `strict_min_version` 140.0 / 142.0.
 - No remote code; the only cross-webpage bridge is `window.postMessage` between
   two content scripts on `meet.jit.si` itself.
 - Permissions are limited to `tabs`, `storage`, `alarms` and the `meet.jit.si`

@@ -37,7 +37,9 @@ function makeItem(session, metaText, durText) {
 
   const chip = document.createElement("span");
   chip.className = "chip";
-  chip.innerHTML = `<span class="chip-dot"></span>${platformName(session.platform)}`;
+  const dot = document.createElement("span");
+  dot.className = "chip-dot";
+  chip.append(dot, document.createTextNode(platformName(session.platform)));
   main.appendChild(chip);
 
   const room = document.createElement("div");
@@ -61,7 +63,7 @@ function makeItem(session, metaText, durText) {
 }
 
 function renderList(el, emptyEl, sessions, itemBuilder) {
-  el.innerHTML = "";
+  el.replaceChildren();
   const show = sessions.length > 0;
   emptyEl.style.display = show ? "none" : "";
   for (const s of sessions) el.appendChild(itemBuilder(s));
