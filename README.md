@@ -3,9 +3,8 @@
 A browser extension that automatically tracks how much time you spend in calls, so
 you don't have to write it down.
 
-- **Jitsi Meet** — with *precise* join/leave detection (counts actual time in the
-  conference, not just the open tab)
-- **Google Meet**
+- **Jitsi Meet** and **Google Meet** — with *precise* join/leave detection (counts
+  actual time in the call, not just the open tab)
 - **Zoom**
 - **MS Teams**
 
@@ -53,9 +52,10 @@ Just open a call. Airtime listens in the background:
 - Going to another site in the same tab ends the session (`navigated-away`).
 - Switching from one meeting room to another creates a new session
   (`call-changed`).
-- On Jitsi, the session start snaps to the moment you actually join the
-  conference; leaving and rejoining creates separate sessions.
-- Opening the Jitsi landing page (`meet.jit.si/`) is *not* counted as a call.
+- On Jitsi and Google Meet, the session start snaps to the moment you actually
+  join the call; leaving and rejoining creates separate sessions.
+- Opening the Jitsi landing page (`meet.jit.si/`) or the Google Meet home page is
+  *not* counted as a call.
 
 Click the toolbar icon to see live status and history. Use **Export CSV** for
 billing or time reports; **Clear history** wipes the log (active sessions are
@@ -67,17 +67,19 @@ kept).
 platform,room,url,start,joined_at,end,duration_min,reason
 ```
 
-`joined_at` is empty for platforms without precise join detection (Google Meet,
-Zoom, Teams) or when the user never joined a Jitsi call.
+`joined_at` is empty for platforms without precise join detection (Zoom, Teams)
+or when the user never joined the call.
 
 ## How it works
 
 ```
 ┌──────────────── browser ─────────────────────────────┐
-│  content-jitsi-page (MAIN world, meet.jit.si only)   │
+│  content-jitsi-page (MAIN world, meet.jit.si)        │
 │    hooks window.APP conference events                │
+│  content-call-page (MAIN world, meet.google.com)     │
+│    watches the "Leave call" control                  │
 │        │ postMessage (joined / left)                 │
-│  content-jitsi (isolated world)                      │
+│  content-jitsi / content-call (isolated world)       │
 │        │ chrome.runtime.sendMessage                  │
 │  background service worker                           │
 │    tab events: onCreated / onUpdated / onRemoved     │
@@ -95,6 +97,11 @@ Zoom, Teams) or when the user never joined a Jitsi call.
   events `conference.joined` / `conference.left`. Because it uses internals, it
   may silently stop working after a Jitsi version change — tab-based tracking
   keeps working as a fallback.
+- **Precise Google Meet tracking** (`content-call-page.js`): a MAIN-world script
+  that infers in-call state from the "Leave call" control (and the "Rejoin" /
+  ended indicators after leaving), then relays normalized joined/left events
+  through `content-call.js`. Best-effort: it depends on Meet's UI, so the
+  selectors may need updating after a Meet redesign.
 - **Storage schema**:
   - `activeSessions`: `{ [tabId]: { platform, room, url, start, joinedAt, lastSeen } }`
   - `history`: `[ { platform, room, url, start, joinedAt, end, durationMs, reason } ]`
@@ -110,6 +117,7 @@ npm run build   # emit dist/chrome and dist/firefox
 npm run package # build + emit ready-to-upload ZIPs (airtime-chrome.zip, airtime-firefox.zip)
 npm run icon:gen # regenerate PNG icons from tools/make-icons.js
 npm run screenshots # generate store screenshots (needs: npm i -D playwright && npx playwright install chromium)
+npm run smoke # browser E2E for the Meet detector (needs playwright, like screenshots)
 ```
 
 CI on GitHub Actions runs the tests and builds the ZIPs on every push and pull
@@ -128,13 +136,18 @@ Project layout:
 background.js          service worker (tracking, badge, heartbeat, reconcile)
 content-jitsi.js       bridge: page → worker (isolated world)
 content-jitsi-page.js  Jitsi join/leave detection (MAIN world)
+content-call.js        bridge for the Meet detector (isolated world)
+content-call-page.js   Google Meet join/leave detection (MAIN world)
 popup.html/css/js      the popup UI
 manifest.json          Chrome manifest (source of truth)
 build.js               dist/chrome + dist/firefox bundles
 test/background.test.js
+test/content-call-page.test.js
 tools/make-icons.js    zero-dependency PNG icon generator
 tools/package-zips.js  zero-dependency ZIP packager
 tools/make-screenshots.js  store screenshot generator (Playwright)
+tools/meet-smoke.js    browser E2E for the Meet detector (Playwright)
+tools/meet-probe.js    live-selector probe (paste into Meet DevTools)
 icons/                 generated icons (PNG) + SVG source
 PRIVACY.md             privacy policy
 .github/workflows/     CI + release automation
@@ -151,9 +164,9 @@ PRIVACY.md             privacy policy
     logs, or the Jitsi webhook for outgoing calls) for authoritative call records.
   - *Mobile*: not practical via extension; Firefox for Android supports a subset
     of WebExtension APIs and may work with this codebase (untested).
-- **Firefox** is supported for the tab-based tracking and the Jitsi precise hook.
-  The Firefox build requires 140+ (desktop) / 142+ (Android) for the mandatory
-  `data_collection_permissions` manifest key.
+- **Firefox** is supported for the tab-based tracking and the Jitsi + Meet precise
+  hooks. The Firefox build requires 140+ (desktop) / 142+ (Android) for the
+  mandatory `data_collection_permissions` manifest key.
 - URL-based detection can't tell whether you are on a call inside an *embedded*
   Jitsi iframe on another site — a content script for that host is a possible
   follow-up.
@@ -162,8 +175,8 @@ PRIVACY.md             privacy policy
 
 No servers, no analytics, no network calls. All data lives in your browser's
 `chrome.storage.local` (or `browser.storage.local` on Firefox). The only
-outgoing resources are the call pages themselves and, on Jitsi, the postMessage
-bridge between two content scripts.
+outgoing resources are the call pages themselves and, on Jitsi and Meet, the
+postMessage bridge between two content scripts.
 
 See [PRIVACY.md](PRIVACY.md) for the full privacy policy.
 

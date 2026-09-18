@@ -21,9 +21,8 @@ logs every session: platform, meeting, start, end and duration.
 
 Supported platforms:
 
-- Jitsi Meet — with precise join/leave detection (counts real time inside the
-  conference, not just the open tab)
-- Google Meet
+- Jitsi Meet and Google Meet — with precise join/leave detection (counts real
+  time inside the call, not just the open tab)
 - Zoom
 - MS Teams
 

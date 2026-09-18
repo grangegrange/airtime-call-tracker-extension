@@ -13,7 +13,7 @@ This walkthrough covers all three channels. Most text is already drafted in
 
 CI on GitHub Actions does all of the above automatically on push/PR and, on a
 `v*` tag, attaches the ZIPs to a GitHub Release — so a release is just
-`git tag v1.2.0 && git push origin v1.2.0`.
+`git tag v1.3.0 && git push origin v1.3.0`.
 
 Test the `dist/chrome` build yourself first (see README → Install).
 
