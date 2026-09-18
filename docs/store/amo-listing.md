@@ -14,7 +14,7 @@ Filled into the AMO developer hub. The add-on id is fixed in the firefox build:
 - **Home page:** https://github.com/grangegrange/airtime-call-tracker-extension
 - **Privacy policy URL:**
   https://github.com/grangegrange/airtime-call-tracker-extension/blob/main/PRIVACY.md
-- **Version:** 1.2.1
+- **Version:** 1.2.2
 
 ## Description
 
@@ -50,3 +50,26 @@ No accounts, no tracking. Install, open a call, done.
   two content scripts on `meet.jit.si` itself.
 - Permissions are limited to `tabs`, `storage`, `alarms` and the `meet.jit.si`
   content script host permission.
+
+## Notes to reviewer (paste into the AMO "notes" field)
+
+Airtime tracks time spent in video calls. The background script matches call
+pages by URL (`tabs` permission) and stores session records in `storage.local`
+(`storage` permission); a 1-minute `alarms` heartbeat keeps durations accurate
+and reconciles sessions on startup.
+
+On `meet.jit.si` only, two content scripts run:
+
+- `content-jitsi-page.js` (`world: "MAIN"`) subscribes to Jitsi's internal
+  `window.APP` conference events (`conference.joined` / `conference.left`) to
+  detect the exact join/leave moment. It cannot call browser APIs from the page
+  world, so it relays only those two boolean events to:
+- `content-jitsi.js` (isolated world) via `window.postMessage`, which validates
+  the sender and forwards the event to the background with
+  `chrome.runtime.sendMessage`.
+
+No data leaves the browser: there are no network requests, no remote code, no
+third-party libraries. All records stay in the browser's local extension
+storage and are only written to a local CSV file if the user clicks "Export".
+The `world: "MAIN"` script is best-effort — if Jitsi changes its internals,
+URL-based tab tracking (which needs no page access) keeps working.

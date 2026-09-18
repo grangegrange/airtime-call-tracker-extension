@@ -3,6 +3,13 @@
 All notable changes to Airtime are documented here. Format follows
 [Keep a Changelog](https://keepachangelog.com/).
 
+## [1.2.2] — 2026-09-18
+
+### Added
+
+- Manifest `homepage_url` and `author`.
+- "Notes to reviewer" block for the AMO submission (`docs/store/amo-listing.md`).
+
 ## [1.2.1] — 2026-09-18
 
 ### Added
