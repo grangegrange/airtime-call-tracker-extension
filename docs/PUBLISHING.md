@@ -10,22 +10,27 @@ This walkthrough covers all three channels. Most text is already drafted in
 3. `npm run package` — produces `dist/airtime-chrome.zip` and
    `dist/airtime-firefox.zip`.
 
+CI on GitHub Actions does all of the above automatically on push/PR and, on a
+`v*` tag, attaches the ZIPs to a GitHub Release — so a release is just
+`git tag v1.2.0 && git push origin v1.2.0`.
+
 Test the `dist/chrome` build yourself first (see README → Install).
 
 ## 1. GitHub (open source)
 
-1. Create an empty repository named `airtime-call-tracker-extension` (put the
-   remote in the repo root). Do **not** add a README/license/gitignore via the
-   web UI — they exist in the commit already.
-2. `git remote add origin https://github.com/<user>/airtime-call-tracker-extension.git`
-3. Verify pushes are allowed, then `git push -u origin main`. **Single clean
-   history** — the repo starts fresh, see below.
-4. Keep `dist/` and the upload zips out of git (they are already ignored);
-   attach `dist/airtime-chrome.zip` / `dist/airtime-firefox.zip` to a GitHub
-   Release if desired.
+The repository is `https://github.com/grangegrange/airtime-call-tracker-extension`
+(public, MIT). The git history starts with one clean commit (old `.git` was
+removed). `dist/` and the upload ZIPs are git-ignored; CI and Releases produce
+them instead.
 
-Fresh git history was created from scratch (old `.git` removed) so the timeline
-starts with one clean commit.
+The privacy policy lives at `PRIVACY.md` and is served from the repo — use this
+URL where a store asks for one:
+
+```
+https://github.com/grangegrange/airtime-call-tracker-extension/blob/main/PRIVACY.md
+```
+
+(Optionally enable GitHub Pages to serve it at a friendlier URL.)
 
 ## 2. Chrome Web Store
 
@@ -39,6 +44,8 @@ starts with one clean commit.
    - (optional) CSV in a spreadsheet app.
 5. Complete the “Privacy practices” questionnaire with the rationale from the
    store doc. **Single purpose** — tracking call time. **No data collected.**
+   Link the privacy policy (`PRIVACY.md` URL from section 1) where the dashboard
+   asks for one.
 6. Submit for review. Turnaround is typically a few days; privacy/host changes
    may extend it.
 
@@ -47,8 +54,10 @@ starts with one clean commit.
 1. `npm run package` and upload `dist/airtime-firefox.zip` to
    [addons.mozilla.org]. Self-distribution, then request a review, or side-load
    locally per README.
-2. Copy the description from `docs/store/amo-listing.md`.
-3. Signing is automatic for self-distributed add-ons; full review is needed to
+2. Copy the description from `docs/store/amo-listing.md` (Home page:
+   `https://github.com/grangegrange/airtime-call-tracker-extension`).
+3. Link the privacy policy (`PRIVACY.md` URL from section 1).
+4. Signing is automatic for self-distributed add-ons; full review is needed to
    be listed. Expect a note that `world: "MAIN"` and the postMessage bridge are
    reviewed carefully.
 

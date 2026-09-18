@@ -111,6 +111,10 @@ npm run package # build + emit ready-to-upload ZIPs (airtime-chrome.zip, airtime
 npm run icon:gen # regenerate PNG icons from tools/make-icons.js
 ```
 
+CI on GitHub Actions runs the tests and builds the ZIPs on every push and pull
+request (`.github/workflows/ci.yml`); pushing a `v*` tag builds and attaches the
+ZIPs to a GitHub Release (`.github/workflows/release.yml`).
+
 Besides this README, useful material lives in `docs/`:
 
 - `docs/PUBLISHING.md` — step-by-step guide for Chrome Web Store, AMO and GitHub
@@ -128,7 +132,10 @@ manifest.json          Chrome manifest (source of truth)
 build.js               dist/chrome + dist/firefox bundles
 test/background.test.js
 tools/make-icons.js    zero-dependency PNG icon generator
+tools/package-zips.js  zero-dependency ZIP packager
 icons/                 generated icons (PNG) + SVG source
+PRIVACY.md             privacy policy
+.github/workflows/     CI + release automation
 ```
 
 ## Limitations & ideas
@@ -154,6 +161,8 @@ No servers, no analytics, no network calls. All data lives in your browser's
 `chrome.storage.local` (or `browser.storage.local` on Firefox). The only
 outgoing resources are the call pages themselves and, on Jitsi, the postMessage
 bridge between two content scripts.
+
+See [PRIVACY.md](PRIVACY.md) for the full privacy policy.
 
 ## License
 

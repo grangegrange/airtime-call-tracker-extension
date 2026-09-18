@@ -52,6 +52,8 @@ timesheet, meeting, productivity
 
 ## Privacy practices (developer dashboard)
 
+- **Privacy policy URL:**
+  `https://github.com/grangegrange/airtime-call-tracker-extension/blob/main/PRIVACY.md`
 - **Single purpose:** track and display time spent in calls.
 - **Data collected:** none transmitted. Session records are only stored in the
   browser's local extension storage (`chrome.storage.local`) and never leave the

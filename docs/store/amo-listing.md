@@ -11,7 +11,9 @@ Filled into the AMO developer hub. The add-on id is fixed in the firefox build:
   Meet, Google Meet, Zoom and MS Teams. 100% local, no account needed.
 - **Categories:** Productivity → Time Management
 - **Tags:** calls, jitsi, meetings, time-tracking
-- **Home page:** (repo URL, once public)
+- **Home page:** https://github.com/grangegrange/airtime-call-tracker-extension
+- **Privacy policy URL:**
+  https://github.com/grangegrange/airtime-call-tracker-extension/blob/main/PRIVACY.md
 - **Version:** 1.2.0
 
 ## Description

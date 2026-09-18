@@ -1,0 +1,37 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+jobs:
+  test-build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      - name: Run tests
+        run: npm test
+
+      - name: Build bundles
+        run: npm run build
+
+      - name: Package ZIPs
+        run: npm run package
+
+      - name: Upload Chrome ZIP
+        uses: actions/upload-artifact@v4
+        with:
+          name: airtime-chrome
+          path: dist/airtime-chrome.zip
+
+      - name: Upload Firefox ZIP
+        uses: actions/upload-artifact@v4
+        with:
+          name: airtime-firefox
+          path: dist/airtime-firefox.zip

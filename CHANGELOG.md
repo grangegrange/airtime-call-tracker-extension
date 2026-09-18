@@ -13,6 +13,9 @@ All notable changes to Airtime are documented here. Format follows
   AMO.
 - Docs: store listings, publishing guide, changelog.
 - Test suite relocated to `test/background.test.js` (`npm test`).
+- `PRIVACY.md` privacy policy (linked from the store listings).
+- GitHub Actions CI (test + build + package on push/PR) and release automation
+  (attaches ZIPs to a GitHub Release on `v*` tags).
 
 ### Changed
 - Firefox support: MV3 background as an event page (`background.scripts`),
