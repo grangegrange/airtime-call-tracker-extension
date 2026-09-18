@@ -9,11 +9,11 @@ jobs:
   test-build:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v5
 
-      - uses: actions/setup-node@v4
+      - uses: actions/setup-node@v5
         with:
-          node-version: 20
+          node-version: 24
 
       - name: Run tests
         run: npm test
@@ -25,13 +25,13 @@ jobs:
         run: npm run package
 
       - name: Upload Chrome ZIP
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v5
         with:
           name: airtime-chrome
           path: dist/airtime-chrome.zip
 
       - name: Upload Firefox ZIP
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v5
         with:
           name: airtime-firefox
           path: dist/airtime-firefox.zip
