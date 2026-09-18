@@ -3,6 +3,25 @@
 All notable changes to Airtime are documented here. Format follows
 [Keep a Changelog](https://keepachangelog.com/).
 
+## [1.3.0] — 2026-09-18
+
+### Added
+
+- Precise join/leave detection for Google Meet: a MAIN-world content script
+  (`content-call-page.js`) infers the in-call state from the "Leave call"
+  control, relays normalized joined/left events through an isolated bridge
+  (`content-call.js`) to the background, which guards against stale events from
+  a different meeting. Pre-join, lobby and the bare meet.google.com page are
+  not counted.
+- End-to-end browser smoke test (`tools/meet-smoke.js`) and a live-selector
+  probe (`tools/meet-probe.js`).
+
+### Changed
+
+- Detection for Meet is best-effort: it depends on Meet's UI, so the selectors
+  may need updating after a Meet redesign. URL-based tracking keeps working as
+  a fallback.
+
 ## [1.2.2] — 2026-09-18
 
 ### Added
