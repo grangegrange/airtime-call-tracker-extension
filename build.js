@@ -8,6 +8,8 @@ const COMMON_FILES = [
   "background.js",
   "content-jitsi.js",
   "content-jitsi-page.js",
+  "content-call.js",
+  "content-call-page.js",
   "popup.html",
   "popup.css",
   "popup.js",

@@ -50,6 +50,8 @@ const assert = (cond, msg) => {
 };
 const msg = (type, tabId, url) =>
   listeners.onMessage({ source: "jst", type }, { tab: { id: tabId, url } });
+const callMsg = (type, tabId, url) =>
+  listeners.onMessage({ source: "call", type, url }, { tab: { id: tabId, url } });
 
 (async () => {
   // --- platform detection ---
@@ -110,6 +112,28 @@ const msg = (type, tabId, url) =>
   await sleep(40);
   const cleared = badgeCalls.filter((c) => "text" in c).at(-1);
   assert(cleared.text === "", "badge cleared when no calls");
+
+  // --- precise tracking for Meet via generic detector (source: "call") ---
+  listeners.onUpdated(6, { url: "https://meet.google.com/qrs-tuvw-xyz" });
+  await sleep(40);
+  assert(store.activeSessions[6]?.platform === "gmeet", "gmeet session via url");
+
+  callMsg("joined", 6, "https://meet.google.com/qrs-tuvw-xyz");
+  await sleep(40);
+  assert(store.activeSessions[6]?.joinedAt != null, "gmeet joinedAt set by detector");
+
+  // stale left from a different meeting must NOT stop the session
+  callMsg("left", 6, "https://meet.google.com/zzz-abcd-efg");
+  await sleep(40);
+  assert(store.activeSessions[6] != null, "stale left ignored (room mismatch)");
+
+  // real left from the same meeting
+  callMsg("left", 6, "https://meet.google.com/qrs-tuvw-xyz");
+  await sleep(40);
+  assert(
+    store.history.some((h) => h.platform === "gmeet" && h.room === "qrs-tuvw-xyz" && h.reason === "left-call"),
+    "gmeet ended by detector left"
+  );
 
   console.log(`\nAll checks passed. Sessions in history: ${store.history.length}`);
 })();

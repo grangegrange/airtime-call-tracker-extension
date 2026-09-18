@@ -35,6 +35,17 @@
       "matches": ["https://meet.jit.si/*"],
       "js": ["content-jitsi.js"],
       "run_at": "document_start"
+    },
+    {
+      "matches": ["https://meet.google.com/*"],
+      "js": ["content-call-page.js"],
+      "world": "MAIN",
+      "run_at": "document_start"
+    },
+    {
+      "matches": ["https://meet.google.com/*"],
+      "js": ["content-call.js"],
+      "run_at": "document_start"
     }
   ]
 }

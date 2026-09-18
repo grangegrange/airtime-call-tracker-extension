@@ -155,9 +155,13 @@ chrome.tabs.onRemoved.addListener((tabId) => {
 // --- precise Jitsi tracking (messages from content script) ---
 
 chrome.runtime.onMessage.addListener((msg, sender) => {
-  if (msg?.source !== "jst" || sender.tab?.id == null) return;
-  if (msg.type === "joined") enqueue(() => onJoined(sender.tab.id, sender.tab.url));
-  else if (msg.type === "left") enqueue(() => onLeft(sender.tab.id));
+  if (sender.tab?.id == null) return;
+  if (msg?.source === "jst") {
+    if (msg.type === "joined") enqueue(() => onJoined(sender.tab.id, sender.tab.url));
+    else if (msg.type === "left") enqueue(() => onLeft(sender.tab.id));
+  } else if (msg?.source === "call") {
+    enqueue(() => onCallEvent(sender.tab.id, msg.type, msg.url));
+  }
 });
 
 async function onJoined(tabId, url) {
@@ -176,6 +180,33 @@ async function onJoined(tabId, url) {
 
 async function onLeft(tabId) {
   await stopSession(tabId, "left-call");
+}
+
+// --- precise tracking for Meet/Zoom/Teams (messages from the generic detector) ---
+// The detector sends normalized joined/left with the page url it observed, so we
+// can guard against stale events that arrive after the tab navigated to a
+// different meeting.
+async function onCallEvent(tabId, type, url) {
+  const found = matchCallUrl(url);
+  const { activeSessions, history } = await getState();
+  const s = activeSessions[tabId];
+
+  if (type === "joined") {
+    if (s) {
+      if (s.joinedAt) return; // already marked
+      if (found && found.room !== s.room) return; // stale join from another meeting
+      s.joinedAt = Date.now();
+      await chrome.storage.local.set({ activeSessions, history });
+    } else {
+      // the tab was missed by URL tracking — start the session at the join moment
+      await startSession(tabId, url, true);
+    }
+    updateBadge();
+  } else if (type === "left") {
+    if (!s) return;
+    if (found && found.room !== s.room) return; // stale left from another meeting
+    await stopSession(tabId, "left-call");
+  }
 }
 
 // --- icon badge timer ---
