@@ -1,8 +1,9 @@
 # Chrome Web Store listing (draft)
 
 Filled into the Chrome Web Store developer dashboard. The 128×128 store icon is
-`icons/icon128.png`. Screenshots (1280×800) still need to be captured from a
-running install — see `docs/PUBLISHING.md`.
+`icons/icon128.png`. Screenshots (1280×800) are committed in
+`docs/store/screenshots/` (`cws-active-1280x800.png`, `cws-history-1280x800.png`);
+regenerate with `tools/make-screenshots.js`.
 
 ## Basic info
 

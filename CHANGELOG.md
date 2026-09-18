@@ -5,6 +5,11 @@ All notable changes to Airtime are documented here. Format follows
 
 ## [1.2.1] — 2026-09-18
 
+### Added
+
+- Store screenshots (popup + 1280×800 landing composites) and a
+  `tools/make-screenshots.js` generator.
+
 ### Changed
 
 - Firefox: added `data_collection_permissions.required = ["none"]` (mandatory

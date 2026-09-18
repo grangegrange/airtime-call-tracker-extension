@@ -109,6 +109,7 @@ npm test        # run the mocked background smoke tests
 npm run build   # emit dist/chrome and dist/firefox
 npm run package # build + emit ready-to-upload ZIPs (airtime-chrome.zip, airtime-firefox.zip)
 npm run icon:gen # regenerate PNG icons from tools/make-icons.js
+npm run screenshots # generate store screenshots (needs: npm i -D playwright && npx playwright install chromium)
 ```
 
 CI on GitHub Actions runs the tests and builds the ZIPs on every push and pull
@@ -133,6 +134,7 @@ build.js               dist/chrome + dist/firefox bundles
 test/background.test.js
 tools/make-icons.js    zero-dependency PNG icon generator
 tools/package-zips.js  zero-dependency ZIP packager
+tools/make-screenshots.js  store screenshot generator (Playwright)
 icons/                 generated icons (PNG) + SVG source
 PRIVACY.md             privacy policy
 .github/workflows/     CI + release automation

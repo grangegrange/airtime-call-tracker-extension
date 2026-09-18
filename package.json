@@ -6,7 +6,8 @@
     "test": "node test/background.test.js",
     "build": "node build.js",
     "icon:gen": "node tools/make-icons.js",
-    "package": "node build.js && node tools/package-zips.js"
+    "package": "node build.js && node tools/package-zips.js",
+    "screenshots": "node tools/make-screenshots.js"
   },
   "license": "MIT"
 }
