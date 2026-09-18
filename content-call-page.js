@@ -22,8 +22,10 @@
   const selectors = IN_CALL_SELECTORS[HOST];
   if (!selectors || selectors.length === 0) return;
 
-  const POST = (type) =>
+  const POST = (type) => {
+    console.log("[airtime] " + type); // diagnostic: visible in the page DevTools console
     window.postMessage({ source: "call-page", type, url: location.href }, "*");
+  };
 
   let inCall = false;
 
@@ -55,6 +57,7 @@
   function start() {
     if (!document.body) return setTimeout(start, 200);
     new MutationObserver(check).observe(document.body, { childList: true, subtree: true });
+    console.log("[airtime] detector ready; leave-call control present:", isInCall());
     check();
   }
 
