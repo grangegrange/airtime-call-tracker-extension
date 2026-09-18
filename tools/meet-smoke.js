@@ -20,6 +20,7 @@ const FAKE = `<!doctype html><html><head><meta charset="utf-8"><title>fake meet<
 <body>
   <div>fake meet page</div>
   <button id="leave" aria-label="Leave call" style="display:none">Leave</button>
+  <button id="rejoin" aria-label="Rejoin" style="display:none">Rejoin</button>
 </body></html>`;
 
 const assert = (cond, msg) => {
@@ -82,6 +83,25 @@ const assert = (cond, msg) => {
   assert(
     s.history.some((h) => h.room === "abc-defg-hij" && h.reason === "left-call"),
     "session ended with left-call when leave control disappears"
+  );
+
+  // the reported bug: leave control lingers while the "Rejoin" screen appears →
+  // the ended indicator must still end the session
+  await page.evaluate(() => {
+    document.getElementById("leave").style.display = "block";
+  });
+  await page.waitForTimeout(2500);
+  s = await readState();
+  assert(Object.values(s.activeSessions)[0]?.joinedAt != null, "rejoined: new session joined");
+
+  await page.evaluate(() => {
+    document.getElementById("rejoin").style.display = "block"; // leave button stays visible
+  });
+  await page.waitForTimeout(2500);
+  s = await readState();
+  assert(
+    s.history.filter((h) => h.room === "abc-defg-hij" && h.reason === "left-call").length >= 2,
+    "left fires via ended indicator even with leave control still visible"
   );
 
   await ctx.close();
