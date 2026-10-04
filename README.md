@@ -118,7 +118,32 @@ npm run package # build + emit ready-to-upload ZIPs (airtime-chrome.zip, airtime
 npm run icon:gen # regenerate PNG icons from tools/make-icons.js
 npm run screenshots # generate store screenshots (needs: npm i -D playwright && npx playwright install chromium)
 npm run smoke # browser E2E for the Meet detector (needs playwright, like screenshots)
+npm run e2e:jitsi # browser E2E for the Jitsi detector against a real Jitsi (needs docker + playwright)
 ```
+
+### Jitsi E2E against a real Jitsi Meet
+
+`content-jitsi-page.js` relies on Jitsi internals (`window.APP.conference._room`
+and its `conference.joined` / `conference.left` events). If Jitsi changes them,
+the extension silently stops counting calls — a fake page cannot catch that.
+
+Public meet.jit.si does not let an automated browser into a call: a moderator
+has to log in first. So `npm run e2e:jitsi` starts the official
+[docker-jitsi-meet](https://github.com/jitsi/docker-jitsi-meet) (pinned release,
+auth off, web on `127.0.0.1:443` only, JVB not published), and headless Chromium
+resolves `meet.jit.si` to it (`--host-resolver-rules`). The extension sees the
+real `https://meet.jit.si/...` URL its manifest matches; inside is real Jitsi.
+
+The test opens a room, checks the prejoin screen is not counted, joins, checks
+`joinedAt`, hangs up and checks the session ended with `left-call`. Containers
+are removed afterwards (`KEEP_JITSI=1` keeps them). Verified on 2026-10-04 that
+it fails when the detector breaks: renaming `_room` or `conference.left` turns
+it red. Renaming `conference.joined` alone does not — the detector also asks
+`isJoined()` when it hooks a new room, so that is redundancy, not a gap.
+
+Downloaded compose, generated passwords and Jitsi config live in
+`tools/jitsi-e2e/.cache/` (gitignored). To upgrade Jitsi, change
+`JITSI_VERSION` in `tools/jitsi-e2e.js`.
 
 CI on GitHub Actions runs the tests and builds the ZIPs on every push and pull
 request (`.github/workflows/ci.yml`); pushing a `v*` tag builds and attaches the
@@ -147,6 +172,8 @@ tools/make-icons.js    zero-dependency PNG icon generator
 tools/package-zips.js  zero-dependency ZIP packager
 tools/make-screenshots.js  store screenshot generator (Playwright)
 tools/meet-smoke.js    browser E2E for the Meet detector (Playwright)
+tools/jitsi-e2e.js     browser E2E for the Jitsi detector on a real docker-jitsi-meet
+tools/jitsi-e2e/       compose override for it (only 127.0.0.1, JVB unpublished)
 tools/meet-probe.js    live-selector probe (paste into Meet DevTools)
 icons/                 generated icons (PNG) + SVG source
 PRIVACY.md             privacy policy

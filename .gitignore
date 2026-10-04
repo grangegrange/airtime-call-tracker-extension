@@ -2,3 +2,5 @@ node_modules/
 dist/
 *.tar.gz
 .DS_Store
+# docker-jitsi-meet для E2E: скачанный compose, .env с паролями, конфиги
+tools/jitsi-e2e/.cache/

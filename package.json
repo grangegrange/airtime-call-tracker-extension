@@ -8,7 +8,8 @@
     "icon:gen": "node tools/make-icons.js",
     "package": "node build.js && node tools/package-zips.js",
     "screenshots": "node tools/make-screenshots.js",
-    "smoke": "node tools/meet-smoke.js"
+    "smoke": "node tools/meet-smoke.js",
+    "e2e:jitsi": "node tools/jitsi-e2e.js"
   },
   "license": "MIT"
 }

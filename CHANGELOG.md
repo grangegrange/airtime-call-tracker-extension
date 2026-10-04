@@ -3,6 +3,17 @@
 All notable changes to Airtime are documented here. Format follows
 [Keep a Changelog](https://keepachangelog.com/).
 
+## [Unreleased]
+
+### Added
+
+- End-to-end test of the Jitsi detector against a real Jitsi Meet
+  (`npm run e2e:jitsi`, `tools/jitsi-e2e.js`): starts the official
+  docker-jitsi-meet on 127.0.0.1, maps `meet.jit.si` to it in headless
+  Chromium, joins and leaves a call and checks the recorded session. Catches
+  Jitsi renaming the internals the detector relies on (`_room`,
+  `conference.left`).
+
 ## [1.3.0] — 2026-09-18
 
 ### Added
